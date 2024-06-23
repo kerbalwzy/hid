@@ -54,3 +54,6 @@ The components of `hid` are licensed as such:
  * `gowchar` is released under the [3-clause BSD](https://github.com/orofarne/gowchar/blob/master/LICENSE) license.
 
 Given the above, `hid` is licensed under GNU LGPL 2.1 or later on Linux and 3-clause BSD on other platforms.
+## 注意点
+
+* 在window系统环境下时, hidDevice.Write()方法接受的参数第一个数据必须是ReportID, 可以默认添加0x00

@@ -75,7 +75,6 @@ import "C"
 
 import (
 	"errors"
-	"runtime"
 	"sync"
 	"unsafe"
 )
@@ -194,17 +193,8 @@ func (dev *hidDevice) Write(b []byte) (int, error) {
 	if device == nil {
 		return 0, ErrDeviceClosed
 	}
-	// Prepend a HID report ID on Windows, other OSes don't need it
-	var report []byte
-	fixlen := 0
-	if runtime.GOOS == "windows" {
-		report = append([]byte{0x00}, b...)
-		fixlen = -1
-	} else {
-		report = b
-	}
 	// Execute the write operation
-	written := int(C.hid_write(device, (*C.uchar)(&report[0]), C.size_t(len(report))))
+	written := int(C.hid_write(device, (*C.uchar)(&b[0]), C.size_t(len(b))))
 	if written == -1 {
 		// If the write failed, verify if closed or other error
 		dev.lock.Lock()
@@ -221,9 +211,6 @@ func (dev *hidDevice) Write(b []byte) (int, error) {
 		}
 		failure, _ := wcharTToString(message)
 		return 0, errors.New("hidapi: " + failure)
-	}
-	if written > 0 {
-		written += fixlen
 	}
 	return written, nil
 }
