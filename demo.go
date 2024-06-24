@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/karalabe/hid"
+	"github.com/kerbalwzy/hid"
 )
 
 func main() {
